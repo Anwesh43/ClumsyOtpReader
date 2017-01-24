@@ -21,7 +21,7 @@ import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-
+import com.anwesome.games.cumsyotpreader.OtpView;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -50,44 +50,37 @@ public class OtpReaderService extends Service{
         addOtpView("hello");
     }
     public void addOtpView(String text) {
-        final OtpView otpView = new OtpView(getApplicationContext(),text);
+        final OtpView otpView = new OtpView(getApplicationContext(),text,windowManager);
         final Handler handler = new Handler();
-        final WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(200,200,WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,PixelFormat.TRANSLUCENT);
+        final WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(400,400,WindowManager.LayoutParams.TYPE_PHONE, WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,PixelFormat.TRANSLUCENT);
         layoutParams.x = 400;
         layoutParams.y = 400;
         windowManager.addView(otpView,layoutParams);
         otpView.setElevation(10);
-        otpView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View view, MotionEvent motionEvent) {
-                windowManager.removeView(view);
-                return true;
-            }
-        });
     }
     public IBinder onBind(Intent intent) {
         return null;
     }
-    private class OtpView extends View {
-        private String text;
-        public OtpView(Context context,String text) {
-            super(context);
-            this.text = text;
-        }
-        public void onDraw(Canvas canvas) {
-            paint.setColor(Color.parseColor("#009688"));
-            Path path = new Path();
-            path.addCircle(canvas.getWidth()/2,canvas.getHeight()/2,canvas.getWidth()/2, Path.Direction.CCW);
-            canvas.clipPath(path);
-            canvas.drawRect(new RectF(0,0,canvas.getWidth(),canvas.getHeight()),paint);
-            paint.setTextSize(40);
-            paint.setColor(Color.WHITE);
-            canvas.drawText(text,canvas.getWidth()/2-paint.measureText(text)/2,canvas.getHeight()/2,paint);
-            String closeHelper = "(click on me to dismiss)";
-            paint.setTextSize(20);
-            canvas.drawText(closeHelper,canvas.getWidth()/2-paint.measureText(closeHelper)/2,3*canvas.getHeight()/5,paint);
-        }
-    }
+//    private class OtpView extends View {
+//        private String text;
+//        public OtpView(Context context,String text) {
+//            super(context);
+//            this.text = text;
+//        }
+//        public void onDraw(Canvas canvas) {
+//            paint.setColor(Color.parseColor("#009688"));
+//            Path path = new Path();
+//            path.addCircle(canvas.getWidth()/2,canvas.getHeight()/2,canvas.getWidth()/2, Path.Direction.CCW);
+//            canvas.clipPath(path);
+//            canvas.drawRect(new RectF(0,0,canvas.getWidth(),canvas.getHeight()),paint);
+//            paint.setTextSize(40);
+//            paint.setColor(Color.WHITE);
+//            canvas.drawText(text,canvas.getWidth()/2-paint.measureText(text)/2,canvas.getHeight()/2,paint);
+//            String closeHelper = "(click on me to dismiss)";
+//            paint.setTextSize(20);
+//            canvas.drawText(closeHelper,canvas.getWidth()/2-paint.measureText(closeHelper)/2,3*canvas.getHeight()/5,paint);
+//        }
+//    }
     private class SmsReceiver extends BroadcastReceiver {
         public void onReceive(Context context,Intent intent) {
             String format = intent.getExtras().getString("format");
